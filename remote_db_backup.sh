@@ -23,21 +23,12 @@ function make_temp_file {
 }
 
 # Please set the variable below
-
-USERNAME=
-PASSWORD=
-# https://
-PROTOCOL=
-# dbadmin.one.com
-DOMAIN=
-DATABASE=
-OUPUT_DIR=/tmp
-
+. ./config.sh
 # 1 = on, 0 = off
-COMPRESSION=
+COMPRESSION=1
 
 # bzip/gzip
-METHOD=
+METHOD=gzip
 
 ###############################################################
 #
@@ -111,7 +102,9 @@ fi
 
 p="token=$TOKEN"
 p="$p&db=$DATABASE"
-p="$p&export_type=database&what=sql&csv_separator=%3B&csv_enclosed=%26quot%3B&csv_escaped=%5C&csv_terminated=AUTO&csv_null=NULL&csv_data=&excel_null=NULL&excel_edition=Windows&excel_data=&htmlexcel_null=NULL&htmlexcel_data=&htmlword_structure=something&htmlword_data=something&htmlword_null=NULL&latex_caption=something&latex_structure=something&latex_structure_caption=Structure+of+table+__TABLE__&latex_structure_continued_caption=Structure+of+table+__TABLE__+%28continued%29&latex_structure_label=tab%3A__TABLE__-structure&latex_comments=something&latex_data=something&latex_columns=something&latex_data_caption=Content+of+table+__TABLE__&latex_data_continued_caption=Content+of+table+__TABLE__+%28continued%29&latex_data_label=tab%3A__TABLE__-data&latex_null=%5Ctextit%7BNULL%7D&ods_null=NULL&ods_data=&odt_structure=something&odt_comments=something&odt_data=something&odt_columns=something&odt_null=NULL&pdf_report_title=&pdf_data=1&sql_header_comment=&sql_compatibility=NONE&sql_structure=something&sql_drop=something&sql_auto_increment=something&sql_backquotes=something&sql_data=something&sql_columns=something&sql_extended=something&sql_max_query_size=50000&sql_hex_for_binary=something&sql_type=INSERT&xml_data=&filename_template=__DB__&remember_template=on"
+p="$p&export_type=database&export_method=quick&quick_or_custom=custom&output_format=sendit&filename_template=%40DATABASE%40&remember_template=on&charset_of_file=utf-8&compression=gzip&what=sql&codegen_structure_or_data=data&codegen_format=0&csv_separator=%2C&csv_enclosed=%22&csv_escaped=%5C&csv_terminated=AUTO&csv_null=NULL&csv_structure_or_data=data&excel_null=NULL&excel_edition=win&excel_structure_or_data=data&htmlword_structure_or_data=structure_and_data&htmlword_null=NULL&json_structure_or_data=data&latex_caption=something&latex_structure_or_data=structure_and_data&latex_structure_caption=Structure+of+table+%40TABLE%40&latex_structure_continued_caption=Structure+of+table+%40TABLE%40+%28continued%29&latex_structure_label=tab%3A%40TABLE%40-structure&latex_relation=something&latex_comments=something&latex_mime=something&latex_columns=something&latex_data_caption=Content+of+table+%40TABLE%40&latex_data_continued_caption=Content+of+table+%40TABLE%40+%28continued%29&latex_data_label=tab%3A%40TABLE%40-data&latex_null=%5Ctextit%7BNULL%7D&mediawiki_structure_or_data=data&ods_null=NULL&ods_structure_or_data=data&odt_structure_or_data=structure_and_data&odt_relation=something&odt_comments=something&odt_mime=something&odt_columns=something&odt_null=NULL&pdf_report_title=&pdf_structure_or_data=data&php_array_structure_or_data=data&sql_include_comments=something&sql_header_comment=&sql_compatibility=NONE&sql_structure_or_data=structure_and_data&sql_procedure_function=something&sql_create_table_statements=something&sql_if_not_exists=something&sql_auto_increment=something&sql_backquotes=something&sql_type=INSERT&sql_insert_syntax=both&sql_max_query_size=50000&sql_hex_for_blob=something&sql_utc_time=something&texytext_structure_or_data=structure_and_data&texytext_null=NULL&xml_structure_or_data=data&xml_export_functions=something&xml_export_procedures=something&xml_export_tables=something&xml_export_triggers=something&xml_export_views=something&xml_export_contents=something&yaml_structure_or_data=data"
+TABLES=$(node app.js | tail -n1)
+p="$p&$TABLES"
 
 if [ $COMPRESSION -eq 1 ]; then
 	if [ $METHOD == 'bzip' ]; then
@@ -136,3 +129,5 @@ if [ $? -eq 0 ]; then
 else
 	echo "--> no attachment"
 fi
+
+s3cmd sync ./backups $S3

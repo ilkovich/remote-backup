@@ -15,3 +15,8 @@ DATABASE
 OUPUT_DIR
 COMPRESSION
 METHOD
+
+= Daniel Ilkovich
+
+Added automatic push to s3 using s3cmd 
+Use nodejs to get table list (could probably do this with curl, but I had the code already)
