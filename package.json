@@ -1,0 +1,13 @@
+{
+    "name": "lgw-backup"
+  , "description": "script for automating phpmyadmin backup"
+  , "version": "0.0.1"
+  , "private": true
+  , "author": "Daniel Ilkovich"
+  , "engines": {
+      "node": ">= 0.4.10"
+    }
+  , "dependencies": {
+	"zombie" : ">0"
+  }
+}
